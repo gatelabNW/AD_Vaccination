@@ -1,0 +1,11 @@
+AN1792_cohort5,,,,,,,,
+ID,Sample,visium-slide-serial-number,area,high-res-iba1,high-res-amyloid,cytassist,Csv,x
+FO671_102-21,102-21,V43J31-108,A1,102-21_IF_multipage_DAPI-Iba1_new,102-21_IF_multipage_DAPI-amyloid_new,102-21,102-21,x
+FO671_102-19,102-19,V43J31-108,D1,102-19_IF_multipage_DAPI-Iba1_new,102-19_IF_multipage_DAPI-amyloid_new,102-19,102-19,x
+FO671_102-15,102-15,V43J25-091,A1,102-15_IF_multipage_DAPI-Iba1_new,102-15_IF_multipage_DAPI-amyloid_new,102-15,102-15,x
+FO671_102-22,102-22,V43J25-091,D1,102-22_IF_multipage_DAPI-Iba1_new,102-22_IF_multipage_DAPI-amyloid_new,102-22,102-22,x
+FO671_102-1,102-1,V43J31-084,A1,102-1_IF_multipage_DAPI-Iba1_new,102-1_IF_multipage_DAPI-amyloid_new,102-1,102-1,x
+FO671_102-16,102-16,V43J31-084,D1,102-16_IF_multipage_DAPI-Iba1_new,102-16_IF_multipage_DAPI-amyloid_new,102-16,102-16,x
+FO671_A34995,A34995,V43J30-094,A1,A34995_IF_multipage_DAPI-Iba1_new,A34995_IF_multipage_DAPI-amyloid_new,A34995,A34995,x
+FO671_NMA22-205,B1,V43J30-094,D1,NMA22-205_B1_10X-1_IF_multipage_DAPI-Iba1_new,NMA22-205_B1_10X-1_IF_multipage_DAPI-amyloid_new,B1,B1,
+x,x,x,x,x,x,x,x,x

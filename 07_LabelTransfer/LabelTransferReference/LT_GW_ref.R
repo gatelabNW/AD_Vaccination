@@ -1,0 +1,153 @@
+# ------------------------------------------------------------------------------
+# -----                                                                    -----
+# -----                        AN1792 Project                             -----
+# -----                                                                    -----
+# -----                           Gate Lab                                 -----
+# -----                     Northwestern University                        -----
+# -----                                                                    -----
+# ------------------------------------------------------------------------------
+#
+# Written by: Thomas Watson
+# Summary: ROSMAP gray/white label transfer reference assembly
+#
+#-------------------------------------------------------------------------------
+
+suppressMessages({
+  library(plyr)
+  library(data.table)
+  library(tidyverse) 
+  library(Seurat)
+  library(rlist)
+  library(doMC)
+  library(UpSetR)
+  library(DElegate)
+  library(DESeq2)
+  library(edgeR)
+  library(sparseMatrixStats)
+  library(SeuratData)
+  library(ComplexHeatmap)
+  library(ggrepel)
+  library(rsvd)
+  library(plotly)
+  library(ggthemes)
+  library(ggplot2)
+  library(cowplot)
+  library(ggsci)
+  library(ggdark)
+  library(viridis)
+  library(car)
+  library(e1071)
+  library(parallel)
+  library(aricode)
+  library(knitr)
+  library(rlist)
+  library(SCP)
+})
+
+options(future.globals.maxSize=1048576000000)
+load("helperfunctions.RData")
+setwd("/objects/")
+set.seed(256)
+
+IN <- readRDS("interneuron0129.rds")
+
+DefaultAssay(IN) <- "RNA"
+
+IN@meta.data$CellTypeBroad <- "Interneuron"
+
+EN <- readRDS("EN0129.rds")
+
+DefaultAssay(EN) <- "RNA"
+
+EN@meta.data$CellTypeBroad <- "EN"
+
+OPC <- readRDS("OPC0129.rds")
+
+DefaultAssay(OPC) <- "RNA"
+
+OPC@meta.data$CellTypeBroad <- "OPC"
+
+Oligos <- readRDS("oligodendrocyte0129.rds")
+
+DefaultAssay(Oligos) <- "RNA"
+
+Oligos@meta.data$CellTypeBroad <- "Oligodendrocyte"
+
+Astros <- readRDS("astrocyte0129.rds")
+
+DefaultAssay(Astros) <- "RNA"
+
+Astros@meta.data$CellTypeBroad <- "Astrocyte"
+
+Stromal <- readRDS("stromal0129.rds")
+
+DefaultAssay(Stromal) <- "RNA"
+
+Stromal@meta.data$CellTypeBroad <- "Stromal"
+
+Immune <- readRDS("immune0129.rds")
+
+DefaultAssay(Immune) <- "RNA"
+
+Immune@meta.data$CellTypeBroad <- "Immune"
+
+ImmuneMNG <- subset(Immune, ct != "Microglia")
+
+Endos <- readRDS("endothelial0129.rds")
+
+DefaultAssay(Endos) <- "RNA"
+
+Endos@meta.data$CellTypeBroad <- "Endothelial"
+
+metacols <- c("orig.ident", "nCount_RNA", "nFeature_RNA", "cluster", "nCount_raw", "nFeature_raw",
+              "id", "barcode", "batch", "projid", "subset", "class",
+              "cell.type", "state", "sub.population", "ct", "CellTypeBroad")
+
+s_merge <- list()
+
+s_meta <-  list()
+
+s_list <- c("Stromal" = Stromal, "Endos" = Endos, "Immune" = Immune, "Astros" = Astros, 
+            "OPC" = OPC, "Oligos" = Oligos, "IN" = IN, "EN" = EN)
+
+names(s_list)
+
+for(cell in names(s_list)){
+  
+  s_merge[[cell]] <- as.data.frame(GetAssayData(s_list[[cell]], assay = "RNA", slot = "data"))
+  
+  s_meta[[cell]] <- s_list[[cell]]@meta.data[,metacols]
+  
+}
+
+s_merged <- list.cbind(s_merge)
+
+s_metadata <- list.rbind(s_meta)
+
+smat <- as.sparse(s_merged)
+
+s <- CreateSeuratObject(counts = s_merged, meta.data = s_metadata)
+
+VlnPlot(s2, assay = "RNA", slot = "counts", group.by = "ct", features = "nFeature_RNA", raster = FALSE)
+
+s2 <- s %>% 
+  NormalizeData() %>% 
+  ScaleData() %>% 
+  FindVariableFeatures()
+
+s2 <- RunPCA(s2, features = s2@assays[["RNA"]]@meta.data[["var.features"]], npcs = 50)
+
+s2 <- RunUMAP(s2, dims = 1:30)
+
+SCP::CellDimPlot(s2, reduction = "umap", group.by = c("ct", "CellTypeBroad"),
+                 theme_use = "theme_cowplot", legend.position = "right")
+
+saveRDS(s2, "GW_0129.rds")
+
+s3 <- s2
+
+s3@assays$RNA <- as(object = s3[["RNA"]], Class = "Assay")
+
+adata <- SCP::srt_to_adata(s3)
+
+adata$write_h5ad("GW_0129.h5ad")

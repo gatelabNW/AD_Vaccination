@@ -1,0 +1,18 @@
+[gene-expression],,
+reference,/projects/p31535/thomas/SEA_AD/cellranger-7.2.0/refdata-gex-GRCh38-2020-A/,
+probe-set,/projects/p31535/thomas/SEA_AD/cellranger-7.2.0/probe_sets/Chromium_Human_Transcriptome_Probe_Set_v1.0.1_GRCh38-2020-A.csv,
+,,
+[libraries],,
+fastq_id,fastqs,feature_types
+LCNMB_scFRP_dec-2023_pool2,/projects/b1042/Gate_Lab/Gate20_12.04.2023/,Gene Expression
+,,
+[samples],,
+sample_id,probe_barcode_ids,description
+NMA22-300-A1,BC001|BC002,ctrl_frontal
+NMA22-205-B1,BC003|BC004,lcnmb_frontal
+NMA22-300-A3,BC005|BC006,ctrl_temporal
+NMA22-205-B3,BC007|BC008,lcnmb_temporal
+NMA22-300-A4,BC009|BC010,ctrl_parietal
+NMA22-205-B4,BC011|BC012,lcnmb_parietal
+NMA22-300-A9,BC013|BC014,ctrl_hipp
+NMA22-205-B9,BC015|BC016,lcnmb_hipp
