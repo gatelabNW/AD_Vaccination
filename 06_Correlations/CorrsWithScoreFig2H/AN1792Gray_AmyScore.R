@@ -49,11 +49,11 @@ suppressMessages({
 })
 
 options(future.globals.maxSize=1048576000000)
-load("/projects/b1169/projects/sea_ad_hypothalamus/results/preprocessing/qc/out_TW_05-04-2023/helperfunctions.RData")
-setwd("/projects/p31535/thomas/AN1792Pub/AmyloidDistanceCorrelations/Cohort1")
+load("helperfunctions.RData")
+setwd("/path/to/data")
 
 # Load seurat object
-s <- readRDS("/projects/b1042/Gate_Lab/AN1792-vacc/results/seurat/03.integration_and_clustering/cohort_1_all/data/all_samples_03.rds")
+s <- readRDS("/path/to/seurat.rds")
 
 # Subset to gray matter
 s <- subset(s, manual_annotation %!in% c("meninges", "white"))
@@ -177,7 +177,7 @@ smeta2 <- smeta
 for(sample in names(smeta2)){
   
   # read csv
-  gliadat[[sample]] <- read.csv(paste0("/projects/b1042/Gate_Lab/thomas/Cell2Location/1121metas/" , sample, "_combined_meta.csv"))
+  gliadat[[sample]] <- read.csv(paste0("/output_dir/" , sample, "_combined_meta.csv"))
   
   # remove NAs
   gliadat[[sample]] <- gliadat[[sample]][!is.na(gliadat[[sample]]$Microglia),]
@@ -345,8 +345,6 @@ resmat <- geneset <- covs <- list()
 # Free unused memory
 gc()
 
-setwd("/projects/p31535/thomas/AN1792Pub/AmyloidDistanceCorrelations/Cohort1")
-
 # Loop over conditions to use the lists we just made
 for(condition_group in names(mats)){
   
@@ -495,9 +493,9 @@ print(p)
 dev.off()
 
 # load gene sets
-eggen <- read.csv("/projects/p31535/thomas/1792Reference/HAM/eggen-microglia.csv")
+eggen <- read.csv("eggen-microglia.csv")
 eggen_genes <- eggen$Gene
-ham <- read.csv("/projects/p31535/thomas/1792Reference/HAM/hamgenes.csv")
+ham <- read.csv("hamgenes.csv")
 ham_genes <- ham$gene
 additional_genes <- c("APOE", "TREM2", "SPP1", "C1QB", "TYROBP", "CD74")
 combined_genes <- unique(c(eggen_genes, ham_genes))
@@ -627,8 +625,6 @@ plotgenes$sharedUnique3 <- plotgenes$sharedUnique2
 plotgenes$sharedUnique3[plotgenes$plotcol == "Sig in nAD"] <- "Sig in nAD"
 
 plotgenes$sharedUnique3[is.na(plotgenes$sharedUnique3)] <- plotgenes$sharedUnique2[is.na(plotgenes$sharedUnique3)]
-
-# plotgenes <- read.csv("/projects/p31535/thomas/AN1792Pub/AmyloidDistanceCorrelations/Cohort1/AmyGliaScore/RawScore/AmyloidSigGenes.csv")
 
 # Make plot
 p <- ggplot(data = plotgenes, 
